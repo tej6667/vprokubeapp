@@ -1,0 +1,51 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vprodb
+  labels:
+    app: vprodb
+spec:
+  selector:
+    matchLabels:
+      app: vprodb
+  template:
+    metadata:
+      labels:
+        app: vprodb
+    spec:
+      containers:
+      - name: vprodb
+        image: tej6667/vprofiledb
+        #Resource requests and limits
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+
+        volumeMounts:
+        - name: vpro-db-data
+          mountPath: /var/lib/mysql 
+        ports:
+        - name: vprodb-port
+          containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: app-secret
+              key: db-pass
+      volumes:
+      - name: vpro-db-data
+        persistentVolumeClaim:
+          claimName: db-pv-claim
+      #initContainers used to clean up the volume before the main container starts
+      initContainers:
+      - name: busybox
+      image: busybox:latest
+      args: ["rm", "-rf", "/var/lib/mysql/lost+found"] #Delete folder before DB Pod mount
+      volumeMounts:
+      - name: vpro-db-data
+        mountPath: /var/lib/mysql
