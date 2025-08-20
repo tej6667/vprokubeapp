@@ -17,13 +17,6 @@ spec:
       containers:
       - name: vproapp
         image: tej6667/vproapp
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
-            memory: "1Gi"
-            cpu: "1Gi"
         ports:
         - name: vproapp-port
           containerPort: 8080
