@@ -16,15 +16,6 @@ spec:
       containers:
       - name: vprodb
         image: tej6667/vprofiledb
-        #Resource requests and limits
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "500m"
-
         volumeMounts:
         - name: vpro-db-data
           mountPath: /var/lib/mysql 
